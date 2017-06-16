@@ -1,20 +1,35 @@
-# Design-patterns
+# Tervezési minták
 
 Az informatikában a programtervezési mintának nevezik a gyakran előforduló programozási feladatokra adható általános, újrafelhasználható megoldásokat. Egy programtervezési minta rendszerint egymással együttműködő objektumok és osztályok leírása.
 
 A tervminták nem nyújtanak kész tervet, amit közvetlenül le lehet kódolni, habár vannak hozzájuk példakódok, amiket azonban meg kell tölteni az adott helyzetre alkalmas kóddal. Céljuk az, hogy leírást vagy sablont nyújtsanak. Segítik formalizálni a megoldást.
 
-A legtöbb tervminta objektumorientált környezetre van kidolgozva. Mivel a funkcionális programozás kevéssé ismert és használt, arra a környezetre még csak kevés tervminta ismert, például a monád. Az objektumorientált minták közül nem mindegyiket lehet, és nem mindegyiket érdemes itt használni. Van, amit módosítani kell.
+A legtöbb tervminta objektumorientált környezetre van kidolgozva. Mivel a funkcionális programozás kevéssé ismert és használt, arra a 
+környezetre még csak kevés tervminta ismert, például a monád. Az objektumorientált minták közül nem mindegyiket lehet, és nem mindegyiket
+érdemes itt használni. Van, amit módosítani kell.
 
-Design pattern kategóriák
-------------
+## A tervezési minták kategóriái
 
-* Creational patterns (Létrehozási minták)
-* Structural patterns (Szerkezeti minták)
-* Behaviour patterns (Viselkedési minták)
+* [Létrehozási minták](#létrehozási-minták)
+* [Szerkezeti minták](#szerkezeti-minták)
+* [Viselkedési minták](#viselkedési-minták)
 
-Singleton pattern (Egyke)
-------------
+# Létrehozási minták
+
+Ezek a minták objektumok létrehozására valók. Bizonyos helyzetekben az objektumok közvetlen létrehozása elbonyolíthatja a terveket vagy a
+kódot. A létrehozási minták ezt egyszerűsítik, és a létrehozás felelősségét a tervmintában szereplő objektumokra ruházza át. Ezek magukba 
+zárják a folyamatot, így azzal a kliensnek nem kell foglalkoznia. A másik alapelv szerint elrejtik a termék konkrét típusát, a létrehozás 
+folyamatát, és azt, hogy hogyan kombinálódnak.
+
+Ebbe a csoportba a következő minták tartoznak:
+* Simple Factory
+* Factory Method
+* Abstract Factory
+* Builder
+* Prototype
+* [Singleton](#singleton-pattern)
+
+## Singleton pattern
 
 A singleton design pattern egy olyan programtervezési minta, amely egy objektumra korlátozza egy osztály létrehozható példányainak a számát.
 Gyakran előfordul, hogy egy osztályt úgy kell megírni, hogy egyetlen példány lehet belőle. Az objektumorientált paradigmából jól ismert, hogy egy osztályból példányt a konstruktorán keresztül lehet készíteni.
@@ -70,8 +85,42 @@ var_dump($president1 === $president2); // true
 
 ```
 
-Visitor pattern (Látogató)
-------------
+
+# Szerkezeti minták
+
+A szerkezeti minták lényege az osztályokból és objektumokból nagyobb szerkezetek létrehozása. Amennyiben osztályokkal dolgozunk,
+örökléssel vagy felületek megvalósításával összetételeket hozunk létre, például több interfész implementálásával egy többféleképpen is
+viselkedő osztályt. Objektumok esetében dinamikus „összeragasztásukkal” érjük el az olyan összetételek létrejöttét, amelyek kellően
+rugalmasak.
+
+Ebbe a csoportba a következő minták tartoznak:
+* Adapter
+* Bridge
+* Composite
+* Decorator
+* Facade
+* Flyweight
+* Proxy
+
+# Viselkedési minták
+
+A viselkedési minták elsősorban algoritmusokkal, illetve az osztályok és objektumok közötti kommunikációval, a felelősségi körök
+kijelölésével foglalkoznak. Bonyolult vezérlési folyamatokat modelleznek az osztályok és objektumok közötti interakciókra lebontva, így 
+könnyebben átláthatóvá téve azokat. Az osztályminták öröklést, az objektumminták aggregációt alkalmaznak ennek érdekében.
+
+Ebbe a csoportba a következő minták tartoznak:
+* Chain of Responsibility
+* Command
+* Iterator
+* Mediator
+* Memento
+* Observer
+* [Visitor](#visitor-pattern)
+* Strategy
+* State
+* Template Method
+
+## Visitor pattern
 
 Az objektumorientált programozásban és a szoftverfejlesztésben a látogató tevezési minta segítségével tudjuk szétválasztani az algoritmust és az objektum szerkezetét. A gyakorlati eredménye ennek a szétválasztásnak az, hogy képessé válik a program arra, hogy új műveleteket 
 adjunk hozzá a létező objektumstruktúrához anélkül, hogy módosítanánk annak szerkezetét. Ez az egyik módja az Open-Closed tervezési alapelv megvalósításának.
