@@ -24,12 +24,12 @@ folyamatát, és azt, hogy hogyan kombinálódnak.
 Ebbe a csoportba a következő minták tartoznak:
 * Simple Factory
 * Factory Method
-* Abstract Factory
+* [Abstract Factory](#abstract-factory)
 * Builder
 * Prototype
-* [Singleton](#singleton-pattern)
+* [Singleton](#singleton)
 
-## Singleton pattern
+## Singleton
 
 A singleton design pattern egy olyan programtervezési minta, amely egy objektumra korlátozza egy osztály létrehozható példányainak a számát.
 Gyakran előfordul, hogy egy osztályt úgy kell megírni, hogy egyetlen példány lehet belőle. Az objektumorientált paradigmából jól ismert, hogy egy osztályból példányt a konstruktorán keresztül lehet készíteni.
@@ -85,6 +85,131 @@ var_dump($president1 === $president2); // true
 
 ```
 
+## Abstract Factory
+
+Az abstract factory programtervezési minta módot nyújt arra, hogy egységbe zárjuk közös témához kapcsolódó egyedi gyártó metódusok egy 
+csoportját anélkül, hogy specifikálnák azok konkrét osztályait. Normál használatban, a kliens szoftver létrehozza az absztrakt gyár egy 
+konkrét implementációját, és aztán a gyár általános interfészét használja a témához kapcsolódó konkrét objektumok létrehozásához. A kliens
+nem tudja (vagy nem törődik vele), milyen konkrét objektumokat kap ezekből a belső gyárakból, mivel csak a termékeik általános interfészét
+használja. Ez a tervezési minta szétválasztja egymástól objektumok egy csoportjának implementációját azok általános használatától és 
+objektum összetételre hagyatkozik, mivel az objektumok létrehozása olyan metódusokban van implementálva, amik a gyár interfészén vannak
+ismertté téve számára.
+
+Egy gyár, egy konkrét osztály helye a kódban, ahol az objektumok létrejönnek. Az absztrakt gyár minta használatának szándéka arra irányul, 
+hogy elszigetelje egymástól az objektumok létrehozását azok használatától, és hogy egymással összefüggő objektumok családjait hozza létre
+anélkül, hogy azok konkrét osztályaitól függene. Ez lehetővé teszi új származtatott típusok bevezetését, anélkül, hogy az ős osztályokat
+használó kódót meg kellene változtatni.
+
+**Pédakód**
+
+Először készítsünk egy `Door` interfészt valamint néhány implementációt.
+
+```php
+interface Door
+{
+    public function getDescription();
+}
+
+class WoodenDoor implements Door
+{
+    public function getDescription()
+    {
+        echo 'I am a wooden door';
+    }
+}
+
+class IronDoor implements Door
+{
+    public function getDescription()
+    {
+        echo 'I am an iron door';
+    }
+}
+```
+
+Ezután minden egyes ajtótípushoz rendeljünk különböző ajtószerelő szakértőket:
+
+```php
+interface DoorFittingExpert
+{
+    public function getDescription();
+}
+
+class Welder implements DoorFittingExpert
+{
+    public function getDescription()
+    {
+        echo 'I can only fit iron doors';
+    }
+}
+
+class Carpenter implements DoorFittingExpert
+{
+    public function getDescription()
+    {
+        echo 'I can only fit wooden doors';
+    }
+}
+```
+
+Majd az absztrakt gyárunk lehetővé teszi, hogy az összekapcsolódó objektumainkat egységbe zárjuk.
+
+```php
+interface DoorFactory
+{
+    public function makeDoor(): Door;
+    public function makeFittingExpert(): DoorFittingExpert;
+}
+
+// Wooden factory to return carpenter and wooden door
+class WoodenDoorFactory implements DoorFactory
+{
+    public function makeDoor(): Door
+    {
+        return new WoodenDoor();
+    }
+
+    public function makeFittingExpert(): DoorFittingExpert
+    {
+        return new Carpenter();
+    }
+}
+
+// Iron door factory to get iron door and the relevant fitting expert
+class IronDoorFactory implements DoorFactory
+{
+    public function makeDoor(): Door
+    {
+        return new IronDoor();
+    }
+
+    public function makeFittingExpert(): DoorFittingExpert
+    {
+        return new Welder();
+    }
+}
+```
+
+A következőképp használható:
+
+```php
+$woodenFactory = new WoodenDoorFactory();
+
+$door = $woodenFactory->makeDoor();
+$expert = $woodenFactory->makeFittingExpert();
+
+$door->getDescription();  // Output: I am a wooden door
+$expert->getDescription(); // Output: I can only fit wooden doors
+
+// Same for Iron Factory
+$ironFactory = new IronDoorFactory();
+
+$door = $ironFactory->makeDoor();
+$expert = $ironFactory->makeFittingExpert();
+
+$door->getDescription();  // Output: I am an iron door
+$expert->getDescription(); // Output: I can only fit iron doors
+```
 
 # Szerkezeti minták
 
