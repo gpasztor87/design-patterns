@@ -222,10 +222,127 @@ Ebbe a csoportba a következő minták tartoznak:
 * Adapter
 * Bridge
 * Composite
-* Decorator
+* [Decorator](#decorator-pattern)
 * Facade
 * Flyweight
 * Proxy
+
+## Decorator pattern
+
+A díszítő programtervező minta egy olyan programtervezési minta, amely lehetővé teszi adott objektumokhoz más viselkedések hozzáadását
+akár statikusan, akár dinamikusan anélkül, hogy hatással lenne az azonos osztályból származó többi objektumra. A díszítő gyakran alkalmas
+arra is, hogy a program megfeleljen az egyértelmű felelősség elvének, mivel lehetővé teszi a felelősségek egyértelmű felosztását különböző
+osztályok között.
+
+**Pédakód**
+
+A következő példa a díszítők használatát szemlélteti a kávékészítés esetén. Ebben a példában az esetünk csak a költségeket és a
+leírásokat tartalmazza.
+
+```php
+interface Coffee
+{
+    public function getCost();
+    public function getDescription();
+}
+
+class SimpleCoffee implements Coffee
+{
+    public function getCost()
+    {
+        return 10;
+    }
+
+    public function getDescription()
+    {
+        return 'Simple coffee';
+    }
+}
+```
+
+A következő osztályok tartalmazzák a díszítőket az összes `Coffee` osztályra, beleértve a díszítő osztályokat magukat.
+
+```php
+class MilkCoffee implements Coffee
+{
+    protected $coffee;
+
+    public function __construct(Coffee $coffee)
+    {
+        $this->coffee = $coffee;
+    }
+
+    public function getCost()
+    {
+        return $this->coffee->getCost() + 2;
+    }
+
+    public function getDescription()
+    {
+        return $this->coffee->getDescription() . ', milk';
+    }
+}
+
+class WhipCoffee implements Coffee
+{
+    protected $coffee;
+
+    public function __construct(Coffee $coffee)
+    {
+        $this->coffee = $coffee;
+    }
+
+    public function getCost()
+    {
+        return $this->coffee->getCost() + 5;
+    }
+
+    public function getDescription()
+    {
+        return $this->coffee->getDescription() . ', whip';
+    }
+}
+
+class VanillaCoffee implements Coffee
+{
+    protected $coffee;
+
+    public function __construct(Coffee $coffee)
+    {
+        $this->coffee = $coffee;
+    }
+
+    public function getCost()
+    {
+        return $this->coffee->getCost() + 3;
+    }
+
+    public function getDescription()
+    {
+        return $this->coffee->getDescription() . ', vanilla';
+    }
+}
+```
+
+Hívása a következőképp történik:
+
+```php
+$someCoffee = new SimpleCoffee();
+echo $someCoffee->getCost(); // 10
+echo $someCoffee->getDescription(); // Simple Coffee
+
+$someCoffee = new MilkCoffee($someCoffee);
+echo $someCoffee->getCost(); // 12
+echo $someCoffee->getDescription(); // Simple Coffee, milk
+
+$someCoffee = new WhipCoffee($someCoffee);
+echo $someCoffee->getCost(); // 17
+echo $someCoffee->getDescription(); // Simple Coffee, milk, whip
+
+$someCoffee = new VanillaCoffee($someCoffee);
+echo $someCoffee->getCost(); // 20
+echo $someCoffee->getDescription(); // Simple Coffee, milk, whip, vanilla
+```
 
 # Viselkedési minták
 
