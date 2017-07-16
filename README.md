@@ -358,7 +358,7 @@ Ebbe a csoportba a következő minták tartoznak:
 * Memento
 * [Observer](#observer-pattern)
 * [Visitor](#visitor-pattern)
-* Strategy
+* [Strategy](#strategy-pattern)
 * State
 * Template Method
 
@@ -598,4 +598,72 @@ $lion->accept($jump);      // Jumped 7 feet! Back on the ground!
 $dolphin->accept($speak);  // Tuut tutt tuutt!
 $dolphin->accept($jump);   // Walked on water a little and disappeared
 ```
+
+## Strategy pattern
+
+A számítógép-programozásban a stratégia minta (vezérelv mintaként is ismert) egy szoftvertervezési minta, amely lehetővé teszi, hogy egy
+algoritmus viselkedését a futás során válasszuk meg. A stratégia minta meghatározza az algoritmusok egy családját, egységbe foglal minden
+algoritmust, és a családon belül cserélhetővé teszi ezeket az algoritmusokat. A stratégia segítségével az algoritmus az őt használó
+kliensektől függetlenül változhat, miután az megtette a beállításokat.
+
+**Példakód**
+
+```php
+interface SortStrategy
+{
+    public function sort(array $dataset): array;
+}
+
+class BubbleSortStrategy implements SortStrategy
+{
+    public function sort(array $dataset): array
+    {
+        echo "Sorting using bubble sort";
+
+        // Do sorting
+        return $dataset;
+    }
+}
+
+class QuickSortStrategy implements SortStrategy
+{
+    public function sort(array $dataset): array
+    {
+        echo "Sorting using quick sort";
+
+        // Do sorting
+        return $dataset;
+    }
+}
+
+class Sorter
+{
+    protected $sorter;
+
+    public function __construct(SortStrategy $sorter)
+    {
+        $this->sorter = $sorter;
+    }
+
+    public function sort(array $dataset): array
+    {
+        return $this->sorter->sort($dataset);
+    }
+}
+```
+
+Egy példa a használatára:
+
+```php
+$dataset = [1, 5, 4, 3, 2, 8];
+
+$sorter = new Sorter(new BubbleSortStrategy());
+$sorter->sort($dataset); // Output : Sorting using bubble sort
+
+$sorter = new Sorter(new QuickSortStrategy());
+$sorter->sort($dataset); // Output : Sorting using quick sort
+```
+
+```
+
 
