@@ -356,11 +356,109 @@ Ebbe a csoportba a következő minták tartoznak:
 * Iterator
 * Mediator
 * Memento
-* Observer
+* [Observer](#observer-pattern)
 * [Visitor](#visitor-pattern)
 * Strategy
 * State
 * Template Method
+
+
+## Observer pattern
+
+Az Observer, vagy Megfigyelő minta egy olyan szoftvertervezési minta, melyben egy objektum, melyet alanynak hívunk, listát vezet 
+alárendeltjeiről, akiket megfigyelőknek hívunk és automatikusan értesíti őket bármilyen állapotváltozásról, többnyire valamely metódusuk 
+meghívásán keresztül. Többnyire elosztott eseménykezelő rendszerek kialakításakor használjuk. A Megfigyelő minta kulcsfontosságú része az
+ismert Model-View-Controller (MVC, Modell-Nézet-Vezérlő) architekturális modellnek. A Megfigyelő mintát számos programozási könyvtár és 
+rendszer alkalmazza, többek között szinte minden GUI toolkit.
+
+A Megfigyelő minta memóriaszivárgást okozhat, melyet elévülő hallgató problémaként is ismerhetünk, mivel az alap implementáció során
+explicit regisztrációt és explicit deregisztrációt is végrehajtunk, mint a megsemmisítési mintában, mivel az alany erősen kötődik a
+megfigyelőkhöz, hogy azok aktívak maradjanak. Ezt megelőzhetjük, ha az alanyok csak gyengén kötődnek a megfigyelőkhöz.
+
+A megfigyelőt gyakran úgy implementálják, hogy az alany annak az objektumnak a része, aminek az állapotát megfigyelik, és ha szükséges, 
+akkor értesítse a változásról a megfigyelőket. Ez szoros csatolást eredményez, így az alany és a megfigyelők tudnak egymásról, és ami még
+rosszabb, turkálhatnak egymásban. Ez rontja a sebességet, a skálázhatóságot, a karbantarthatóságot, a biztonságot és a rugalmasságot.
+
+Egy másik megvalósítási mód a fel- és leiratkozási minta, ahol üzenetekkel kommunikálnak. Ez tartalmaz egy üzenetsor szervert és egy
+üzenetkezelőt is. Ez lehetővé teszi, hogy a megfigyelők és az alanyok lazábban kapcsolódjanak, és még csak ne ismerjék egymást, hiszen a
+üzenetszerver közvetít közöttük. De a fel- és leiratkozás minta máshogy is használható, amivel jelek és értesítések küldhetők; ezzel
+hasonló eredmény érhető el, a megfigyelő minta használata nélkül.
+
+**Példakód**
+```php
+class JobPost
+{
+    protected $title;
+
+    public function __construct(string $title)
+    {
+        $this->title = $title;
+    }
+
+    public function getTitle()
+    {
+        return $this->title;
+    }
+}
+
+class JobSeeker implements Observer
+{
+    protected $name;
+
+    public function __construct(string $name)
+    {
+        $this->name = $name;
+    }
+
+    public function onJobPosted(JobPost $job)
+    {
+        // Do something with the job posting
+        echo 'Hi ' . $this->name . '! New job posted: '. $job->getTitle();
+    }
+}
+
+class JobPostings implements Observable
+{
+    protected $observers = [];
+
+    protected function notify(JobPost $jobPosting)
+    {
+        foreach ($this->observers as $observer) {
+            $observer->onJobPosted($jobPosting);
+        }
+    }
+
+    public function attach(Observer $observer)
+    {
+        $this->observers[] = $observer;
+    }
+
+    public function addJob(JobPost $jobPosting)
+    {
+        $this->notify($jobPosting);
+    }
+}
+```
+
+Egy példa a használatára:
+
+```php
+// Create subscribers
+$johnDoe = new JobSeeker('John Doe');
+$janeDoe = new JobSeeker('Jane Doe');
+
+// Create publisher and attach subscribers
+$jobPostings = new JobPostings();
+$jobPostings->attach($johnDoe);
+$jobPostings->attach($janeDoe);
+
+// Add a new job and see if subscribers get notified
+$jobPostings->addJob(new JobPost('Software Engineer'));
+
+// Output
+// Hi John Doe! New job posted: Software Engineer
+// Hi Jane Doe! New job posted: Software Engineer
+```
 
 ## Visitor pattern
 
