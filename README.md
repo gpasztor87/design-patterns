@@ -360,7 +360,7 @@ Ebbe a csoportba a következő minták tartoznak:
 * [Visitor](#visitor-pattern)
 * [Strategy](#strategy-pattern)
 * State
-* Template Method
+* [Template Method](#template-method-pattern)
 
 
 ## Observer pattern
@@ -385,6 +385,7 @@ Egy másik megvalósítási mód a fel- és leiratkozási minta, ahol üzenetekk
 hasonló eredmény érhető el, a megfigyelő minta használata nélkül.
 
 **Példakód**
+
 ```php
 class JobPost
 {
@@ -469,6 +470,7 @@ A lényege, hogy lehetővé teszi, hogy egy új virtuális funkciót adjunk az o
 
 
 **Pédakód**
+
 ```php
 // Visitee
 interface Animal
@@ -664,6 +666,114 @@ $sorter = new Sorter(new QuickSortStrategy());
 $sorter->sort($dataset); // Output : Sorting using quick sort
 ```
 
+## Template method pattern
+
+A számítógép-programozásban a sablonfüggvény programtervezési minta egy olyan viselkedési tervezési minta, amely egy sablonfüggvény nevű
+metódus algoritmusával definiálja a program vázát. Ezek némely lépése felüldefiniálható alosztályokban. Lehetővé teszi egyes algoritmusok 
+lépéseinek az újradefiniálását anélkül, hogy az algoritmus struktúrája megváltozna.
+
+Az objektumorientált programozásban az elsőnek létrehozott osztály biztosítja a tervezési algoritmus alaplépéseit. Ezek a lépéseket az 
+absztrakt metódusok valósítják meg. Később, az alosztályokban az absztrakt metódusokat megváltoztatva jönnek létre a valódi változások.
+Így az általános algoritmus egy helyen van definiálva, de a konkrét lépések változtathatóak az alosztályokon keresztül.
+
+A sablonfüggvény tervezési minta gyakran előfordul, legalábbis a legegyszerűbb esetben, ahol a metódus csak egyetlenegy absztrakt metódust
+hív meg egy objektumorientált nyelvben. Ha egy szoftverprogramozó többalakú metódust használ végig, lehet, hogy ez a tervezési minta lesz a természetes velejárója. Ez azért van, mert egy absztrakt vagy többalakú függvény hívása maga az indoka az absztrakt vagy többalakú metódusnak. A sablonfüggvény mintát arra is lehet használni, hogy azonnal plusz értéket adjunk egy szoftvernek.
+
+A sablonfüggvény minta implementációk valósítják meg a védett változók GRASP elvet, mint ahogy az illesztő minta teszi. A különbség annyi,
+hogy az illesztő minta ugyanazt az interfészt adja néhány operációval, míg a sablonfüggvény minta csak egyet ad egynek.
+
+**Példakód**
+
+Először is megvan a sablonfüggvényünk, ami meghatározza az algoritmus vázát.
+
+```php
+abstract class Builder
+{
+
+    // Template method
+    final public function build()
+    {
+        $this->test();
+        $this->lint();
+        $this->assemble();
+        $this->deploy();
+    }
+
+    abstract public function test();
+    abstract public function lint();
+    abstract public function assemble();
+    abstract public function deploy();
+}
 ```
 
+Ezután megvalósíthatjuk az implementációkat:
 
+```php
+class AndroidBuilder extends Builder
+{
+    public function test()
+    {
+        echo 'Running android tests';
+    }
+
+    public function lint()
+    {
+        echo 'Linting the android code';
+    }
+
+    public function assemble()
+    {
+        echo 'Assembling the android build';
+    }
+
+    public function deploy()
+    {
+        echo 'Deploying android build to server';
+    }
+}
+
+class IosBuilder extends Builder
+{
+    public function test()
+    {
+        echo 'Running ios tests';
+    }
+
+    public function lint()
+    {
+        echo 'Linting the ios code';
+    }
+
+    public function assemble()
+    {
+        echo 'Assembling the ios build';
+    }
+
+    public function deploy()
+    {
+        echo 'Deploying ios build to server';
+    }
+}
+```
+
+Egy példa a használatára:
+
+```php
+$androidBuilder = new AndroidBuilder();
+$androidBuilder->build();
+
+// Output:
+// Running android tests
+// Linting the android code
+// Assembling the android build
+// Deploying android build to server
+
+$iosBuilder = new IosBuilder();
+$iosBuilder->build();
+
+// Output:
+// Running ios tests
+// Linting the ios code
+// Assembling the ios build
+// Deploying ios build to server
+```
