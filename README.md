@@ -354,7 +354,7 @@ Ebbe a csoportba a következő minták tartoznak:
 * Chain of Responsibility
 * Command
 * Iterator
-* Mediator
+* [Mediator](#mediator-pattern)
 * [Memento](#memento-pattern)
 * [Observer](#observer-pattern)
 * [Visitor](#visitor-pattern)
@@ -362,6 +362,75 @@ Ebbe a csoportba a következő minták tartoznak:
 * State
 * [Template Method](#template-method-pattern)
 
+
+## Mediator pattern
+
+A programtervezésben a mediátor minta egy olyan objektum, mely megszabja, hogy hogyan viselkedjen objektumok egy csoportja. Ezt a mintát a
+viselkedési minták közé soroljuk annak köszönhetően, hogy képes megváltoztatni a program futási viselkedését.
+
+Általában egy program nagyszámú csoportot tartalmaz, a logika és a számítás ezek között az osztályok között oszlik meg. Azonban ahog újabb
+és újabb osztályokat készítünk egy programhoz, főleg karbantartás vagy refactoring közben, sokkal összetettebbé válhat a kommunikáció ezen
+osztályok között. A program ezáltal nehezen olvashatóvá és kezelhetővé válik. Továbbá nehezebb lesz megváltoztatni a programot, mivel
+bármilyen változás további osztályok kódjának megváltoztatását eredményezheti.
+
+A Mediátor minta alkalmazásakor az objektumok közötti kommunikációt mediátor objektum végzi. Az objektumok ezentúl nem közvetlenül
+egymással kommunikálnak, hanem a Mediátoron keresztül. Ez csökkenti a kommunikáló objektumok közötti függőséget, ezáltal csökkenti a
+csatolás mértékét.
+
+**Példakód**
+
+```php
+interface ChatRoomMediator 
+{
+    public function showMessage(User $user, string $message);
+}
+
+// Mediator
+class ChatRoom implements ChatRoomMediator
+{
+    public function showMessage(User $user, string $message)
+    {
+        $time = date('M d, y H:i');
+        $sender = $user->getName();
+
+        echo $time . '[' . $sender . ']:' . $message;
+    }
+}
+
+class User {
+    protected $name;
+    protected $chatMediator;
+
+    public function __construct(string $name, ChatRoomMediator $chatMediator) {
+        $this->name = $name;
+        $this->chatMediator = $chatMediator;
+    }
+
+    public function getName() {
+        return $this->name;
+    }
+
+    public function send($message) {
+        $this->chatMediator->showMessage($this, $message);
+    }
+}
+```
+
+Használata a következőképpen történik:
+
+```php
+$mediator = new ChatRoom();
+
+$john = new User('John Doe', $mediator);
+$jane = new User('Jane Doe', $mediator);
+
+$john->send('Hi there!');
+$jane->send('Hey!');
+
+// Output will be
+// Feb 14, 10:58 [John]: Hi there!
+// Feb 14, 10:58 [Jane]: Hey!
+```
 
 ## Memento pattern
 
