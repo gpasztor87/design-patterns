@@ -368,10 +368,10 @@ Ebbe a csoportba a következő minták tartoznak:
 A programtervezésben a mediátor minta egy olyan objektum, mely megszabja, hogy hogyan viselkedjen objektumok egy csoportja. Ezt a mintát a
 viselkedési minták közé soroljuk annak köszönhetően, hogy képes megváltoztatni a program futási viselkedését.
 
-Általában egy program nagyszámú csoportot tartalmaz, a logika és a számítás ezek között az osztályok között oszlik meg. Azonban ahog újabb
-és újabb osztályokat készítünk egy programhoz, főleg karbantartás vagy refactoring közben, sokkal összetettebbé válhat a kommunikáció ezen
-osztályok között. A program ezáltal nehezen olvashatóvá és kezelhetővé válik. Továbbá nehezebb lesz megváltoztatni a programot, mivel
-bármilyen változás további osztályok kódjának megváltoztatását eredményezheti.
+Általában egy program nagyszámú csoportot tartalmaz, a logika és a számítás ezek között az osztályok között oszlik meg. Azonban ahogy
+újabb és újabb osztályokat készítünk egy programhoz, főleg karbantartás vagy refactoring közben, sokkal összetettebbé válhat a
+kommunikáció ezen osztályok között. A program ezáltal nehezen olvashatóvá és kezelhetővé válik. Továbbá nehezebb lesz megváltoztatni a
+programot, mivel bármilyen változás további osztályok kódjának megváltoztatását eredményezheti.
 
 A Mediátor minta alkalmazásakor az objektumok közötti kommunikációt mediátor objektum végzi. Az objektumok ezentúl nem közvetlenül
 egymással kommunikálnak, hanem a Mediátoron keresztül. Ez csökkenti a kommunikáló objektumok közötti függőséget, ezáltal csökkenti a
