@@ -355,13 +355,93 @@ Ebbe a csoportba a következő minták tartoznak:
 * Command
 * Iterator
 * Mediator
-* Memento
+* [Memento](#memento-pattern)
 * [Observer](#observer-pattern)
 * [Visitor](#visitor-pattern)
 * [Strategy](#strategy-pattern)
 * State
 * [Template Method](#template-method-pattern)
 
+
+## Memento pattern
+
+A Memento programtervezési minta biztosítja, hogy egy objektum visszaállítható legyen az előző állapotába.
+
+A Memento minta három objektummal implementálható: originator (kezdeményező), caretaker (gondnok), memento (emlékeztető). Az originator 
+egy objektum, aminek van valamilyen belső állapota. A caretaker valamit módosít az originator belső állapotán, azonban azt akarja, hogy
+lehetősége legyen visszavonni a változásokat. A caretaker először kér az originator-tól egy memento objektumot. Ezután valamilyen
+műveletet (vagy műveleteket) végez az originator-on, majd, ha vissza akarja állítani az előző állapotot, akkor visszaadja az originato-nak
+a memento objektumot. A memento objektum önmagában egy átlátszatlan objektum (a caretaker nem változtathatja meg, vagy nem ajánlott
+megváltoztatnia). Amikor ezt a mintát használjuk, ügyelni kell arra, hogy ez csak egy objektummal foglalkozik, az originator eközben
+megváltoztathat más objektumokat vagy erőforrásokat.
+
+**Példakód**
+
+```php
+class EditorMemento
+{
+    protected $content;
+
+    public function __construct(string $content)
+    {
+        $this->content = $content;
+    }
+
+    public function getContent()
+    {
+        return $this->content;
+    }
+}
+
+class Editor
+{
+    protected $content = '';
+
+    public function type(string $words)
+    {
+        $this->content = $this->content . ' ' . $words;
+    }
+
+    public function getContent()
+    {
+        return $this->content;
+    }
+
+    public function save()
+    {
+        return new EditorMemento($this->content);
+    }
+
+    public function restore(EditorMemento $memento)
+    {
+        $this->content = $memento->getContent();
+    }
+}
+```
+
+Használata a következőképpen történik:
+
+```php
+$editor = new Editor();
+
+// Type some stuff
+$editor->type('This is the first sentence.');
+$editor->type('This is second.');
+
+// Save the state to restore to : This is the first sentence. This is second.
+$saved = $editor->save();
+
+// Type some more
+$editor->type('And this is third.');
+
+// Output: Content before Saving
+echo $editor->getContent(); // This is the first sentence. This is second. And this is third.
+
+// Restoring to last saved state
+$editor->restore($saved);
+
+$editor->getContent(); // This is the first sentence. This is second.
+```
 
 ## Observer pattern
 
