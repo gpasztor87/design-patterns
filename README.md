@@ -26,7 +26,7 @@ Ebbe a csoportba a következő minták tartoznak:
 * Factory Method
 * [Abstract Factory](#abstract-factory)
 * Builder
-* Prototype
+* [Prototype](#prototype)
 * [Singleton](#singleton)
 
 ## Abstract Factory
@@ -154,6 +154,72 @@ $expert = $ironFactory->makeFittingExpert();
 $door->getDescription();  // Output: I am an iron door
 $expert->getDescription(); // Output: I can only fit iron doors
 ```
+
+## Prototype
+
+A minta lényege a klónozás, azaz az eredeti objektummal megegyező új példány létrehozása. Az egyszerű értékadás erre nem alkalmas,
+mivel az csak az objektum hivatkozását másolja le, melynek eredményeképpen az eredeti példány és másolata ugyanoda hivatkozik.
+Két típust különböztetünk meg, a sekély és a mély klónozást. A sekély klónozás esetében az osztály által hivatkozott objektumokat
+ugyanúgy másoljuk, mint elemi típusú tulajdonságait. A mély klónozásnál az osztály által hivatkozott objektumokat is klónozzuk.
+
+**Példakód**
+
+PHP-ban egyszerű a megvalósítása a `clone` használatával.
+
+```php
+class Sheep
+{
+    protected $name;
+    protected $category;
+
+    public function __construct(string $name, string $category = 'Mountain Sheep')
+    {
+        $this->name = $name;
+        $this->category = $category;
+    }
+
+    public function setName(string $name)
+    {
+        $this->name = $name;
+    }
+
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    public function setCategory(string $category)
+    {
+        $this->category = $category;
+    }
+
+    public function getCategory()
+    {
+        return $this->category;
+    }
+}
+```
+
+Ezután a klónozása a következőképp történik:
+
+```php
+$original = new Sheep('Jolly');
+echo $original->getName(); // Jolly
+echo $original->getCategory(); // Mountain Sheep
+
+// Clone and modify what is required
+$cloned = clone $original;
+$cloned->setName('Dolly');
+echo $cloned->getName(); // Dolly
+echo $cloned->getCategory(); // Mountain sheep
+```
+
+A `__clone` metódus felüldefiniálásával tudunk módosítsani a klónozás műköésén.
+
+**Mikor használjuk?**
+
+Ha egy olyan objektumra van szükség, amely egy meglévőhöz nagyon hasonlít, vagy amikor a létrehozás
+a klónozáshoz képest drágább folyamat lenne.
 
 ## Singleton
 
