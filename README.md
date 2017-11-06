@@ -214,7 +214,7 @@ echo $cloned->getName(); // Dolly
 echo $cloned->getCategory(); // Mountain sheep
 ```
 
-A `__clone` metódus felüldefiniálásával tudunk módosítsani a klónozás műköésén.
+A `__clone` metódus felüldefiniálásával tudunk módosítsani a klónozás működésén.
 
 **Mikor használjuk?**
 
